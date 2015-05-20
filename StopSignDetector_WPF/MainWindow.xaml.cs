@@ -33,6 +33,7 @@ namespace StopSignDetector_WPF
         private CamHelper global_helper;
         private Image<Bgr, Byte> video_small, video_large, model_small, model_large;
         private bool model_selected = false;
+        long time;double area;  int areathreshold = 500; System.Drawing.Point center;
         public MainWindow()
         {
             InitializeComponent();
@@ -49,7 +50,22 @@ namespace StopSignDetector_WPF
             if (video_small != null)
             {
                 show_Image(videoframe_s, video_small);
+                if (model_selected)
+                {
+                    ApplySurfMatching();
+                }
             }
+        }
+        public void ApplySurfMatching()
+        {
+            SurfProcessor cpu = new SurfProcessor();
+            System.Drawing.Bitmap m1 = model_large.ToBitmap();
+            Image<Gray, Byte> m_g = new Image<Gray, Byte>(m1);
+            System.Drawing.Bitmap v1 = video_large.ToBitmap();
+            Image<Gray, Byte> v_g = new Image<Gray, Byte>(v1);
+            Image<Bgr, Byte> match_result = cpu.DrawResult(m_g, v_g, out time, out area, areathreshold, out center);
+
+            show_Image(match_res, match_result);
         }
         [System.Runtime.InteropServices.DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
@@ -69,6 +85,7 @@ namespace StopSignDetector_WPF
         }
         public void show_Image(System.Windows.Controls.Image imgbox, Image<Bgr, Byte> img)
         {
+            if(img!=null)
             imgbox.Source = ToBitmapSource(img.ToBitmap());
         }
         private void shot_Click(object sender, RoutedEventArgs e)

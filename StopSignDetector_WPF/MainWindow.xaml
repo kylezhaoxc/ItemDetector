@@ -11,7 +11,7 @@
         <Image x:Name="videoframe_s" Width="320" Height="240" HorizontalAlignment="Left" VerticalAlignment="top" Margin="10,40" />
         <Label FontSize="15" Height="30" Width="320" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,280,0,0">model picture</Label>
         <Image x:Name="modelpic_s" Width="320" Height="240" HorizontalAlignment="Left" VerticalAlignment="top" Margin="10,310,10,10" />
-        <Image x:Name="match_result" Width="640" Height="480" HorizontalAlignment="Left" VerticalAlignment="top" Margin="450,35,10,35" />
+        <Image x:Name="match_res" Width="640" Height="480" HorizontalAlignment="Left" VerticalAlignment="top" Margin="450,35,10,35" />
         <Button x:Name="shot" HorizontalAlignment="Left" VerticalAlignment="top" Width="60" Height="30" Margin="350,40,0,0" Click="shot_Click">smile!</Button>
     </Grid>
 </Window>
