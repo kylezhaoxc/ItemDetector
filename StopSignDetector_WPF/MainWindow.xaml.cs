@@ -58,7 +58,7 @@ namespace StopSignDetector_WPF
                     UIHandler.show_Image(videoframe_s, video_small);
                 if (video_large != null && model_pic != null)
                     SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
-                MatchStatus.Enqueue(area);
+                /*MatchStatus.Enqueue(area);
                 if (MatchStatus.Count > 100) MatchStatus.Dequeue();
                 int PositiveMatchNum= StatusCheck(MatchStatus);
                 if (PositiveMatchNum >= leastPositiveMatch)
@@ -67,7 +67,7 @@ namespace StopSignDetector_WPF
                     if (CenterPoints.Count > 200) CenterPoints.Dequeue();
                     string Indicator;
                     PositionCheck(CenterPoints, out Indicator);
-                }
+                }*/
             }
             
         }
@@ -106,7 +106,7 @@ namespace StopSignDetector_WPF
             model_small = video_small;
             UIHandler.show_Image(modelpic_s, model_small);
             model_pic = video_large;
-            model_pic.Save(AppDomain.CurrentDomain.BaseDirectory+"\\modelpicture.jpg");
+            //model_pic.Save(AppDomain.CurrentDomain.BaseDirectory+"\\modelpicture.jpg");
 
         }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StopSignDetector_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" d:DesignHeight="643.955" Height="600" Width="800">
+        Title="MainWindow" d:DesignHeight="643.955" Height="900" Width="1100">
     <Grid Margin="0,0,0,0">
         <Label FontSize="15" Height="30" Width="320" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">Web Camera Image</Label>
         <Image x:Name="videoframe_s" Width="320" Height="240" HorizontalAlignment="Left" VerticalAlignment="top" Margin="10,40" />

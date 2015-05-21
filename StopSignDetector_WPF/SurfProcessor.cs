@@ -13,6 +13,7 @@ namespace StopSignDetector_WPF
 {
     class SurfProcessor : MatchFilter_interface
     {
+        int index = 0;
         public  int CountContours(System.Drawing.Bitmap temp)
         {
             int ContourNumber = 0;
@@ -157,7 +158,7 @@ namespace StopSignDetector_WPF
                         Image<Bgr, byte> temp = new Image<Bgr, Byte>(result.Width, result.Height);
                         temp.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5);
                    
-                        //temp.Save("D:\\temp\\" + (++index) + ".jpg");
+                        temp.Save("D:\\temp\\" + (++index) + ".jpg");
                         
                         int a = CountContours(temp.ToBitmap());
                         if (a == 2 ){ result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
