@@ -106,7 +106,7 @@ namespace StopSignDetector_WPF
             model_small = video_small;
             UIHandler.show_Image(modelpic_s, model_small);
             model_pic = video_large;
-            //model_pic.Save(AppDomain.CurrentDomain.BaseDirectory+"\\modelpicture.jpg");
+            model_pic.Save(AppDomain.CurrentDomain.BaseDirectory+"\\modelpicture.jpg");
 
         }
 

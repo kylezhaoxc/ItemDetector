@@ -65,6 +65,8 @@ namespace StopSignDetector_WPF
             center = new Point(320,240);
             Stopwatch watch;
             area = 0;
+            modelImage.Save("D:\\temp\\modelimage.jpg");
+            observedImage.Save("D:\\temp\\observedimage.jpg");
 
             double modelarea = (modelImage.ROI.Right - modelImage.ROI.Left) * (modelImage.ROI.Bottom - modelImage.ROI.Top);
             //单应矩阵
@@ -130,10 +132,11 @@ namespace StopSignDetector_WPF
 
             //画出匹配的特征点
             //Image<Bgr, Byte> result = Features2DToolbox.DrawMatches(modelImage, modelKeyPoints, observedImage, observedKeyPoints,indices, new Bgr(0, 0, 255), new Bgr(0, 255, 0), mask, Features2DToolbox.KeypointDrawType.DEFAULT);
+           // result.Save("D:\\temp\\matchedpoints.jpg");
                 Image<Bgr, byte> result = null;
                 System.Drawing.Bitmap bm = observedImage.ToBitmap();
                 result = new Image<Bgr, byte>(bm);
-            #region draw the projected region on the image
+            #region draw the projected region on the Image
             //画出单应矩阵
                 if (homography != null)
                 {
