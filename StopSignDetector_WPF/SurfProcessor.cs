@@ -13,6 +13,7 @@ namespace StopSignDetector_WPF
 {
     class SurfProcessor :ImagePropertiesAnalyzer
     {
+        int index = 1;
         public  int CountContours(System.Drawing.Bitmap temp)
         {
             int ContourNumber = 0;
@@ -61,9 +62,12 @@ namespace StopSignDetector_WPF
         }
         public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
+            modelImage.Save("D:\\temp\\model" + index + ".jpg");
+            observedImage.Save("D:\\temp\\observed" + index + ".jpg");
             center = new Point(320,240);
             Stopwatch watch;
             area = 0;
+
             double modelarea = (modelImage.ROI.Right - modelImage.ROI.Left) * (modelImage.ROI.Bottom - modelImage.ROI.Top);
             //单应矩阵
             HomographyMatrix homography = null;
@@ -120,7 +124,7 @@ namespace StopSignDetector_WPF
                     nonZeroCount = Features2DToolbox.VoteForSizeAndOrientation(modelKeyPoints, observedKeyPoints, indices, mask, 1.5, 20);
                     if (nonZeroCount >= 10)
                         //使用剩余特征点，构建单应矩阵
-                        homography = Features2DToolbox.GetHomographyMatrixFromMatchedFeatures(modelKeyPoints, observedKeyPoints, indices, mask, 2);
+                        homography = Features2DToolbox.GetHomographyMatrixFromMatchedFeatures(modelKeyPoints, observedKeyPoints, indices, mask,2);
                 }
 
                 watch.Stop();
@@ -159,7 +163,7 @@ namespace StopSignDetector_WPF
                         //temp.Save("D:\\temp\\" + (++index) + ".jpg");
                         
                         int a = CountContours(temp.ToBitmap());
-                        if (a == 1) { result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
+                        if (a == 2 ){ result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
                         else { matchTime = 0; area = 0; return result; }
                     }
                 }

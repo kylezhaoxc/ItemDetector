@@ -13,8 +13,7 @@ namespace StopSignDetector_WPF
 {
     class CamHelper { 
         private  static CamHelper helper;
-        private  Capture cap;
-        private int capcount = 0;
+        private  Capture cap;   
         public static CamHelper Ret_Helper(ref Capture capture)
         {
             if (helper == null)
@@ -29,7 +28,7 @@ namespace StopSignDetector_WPF
         public void Ret_Frames(out Image<Bgr,Byte>small, out Image<Bgr, Byte> large)
         {
             small = null;large = null;
-            if (cap.Grab()) { large=cap.QueryFrame();small= cap.QuerySmallFrame();return; }
+            while (cap.Grab()) { large=cap.QueryFrame();small= cap.QuerySmallFrame();return; }
         }
       
     }
