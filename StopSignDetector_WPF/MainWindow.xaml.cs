@@ -93,7 +93,6 @@ namespace StopSignDetector_WPF
                                 break;
                             default:break;
                         }
-                        //while matching a clean item,  
                         if (area > 100000)
                         {
                             txt_dist.Content = "Getting Close!";
