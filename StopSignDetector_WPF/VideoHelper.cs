@@ -11,24 +11,24 @@ using Emgu.CV.CvEnum;
 
 namespace StopSignDetector_WPF
 {
-    class CamHelper { 
-        private  static CamHelper helper;
+    class VideoHelper { 
+        private  static VideoHelper helper;
         private  Capture cap;   
-        public static CamHelper Ret_Helper(ref Capture capture)
+        public static VideoHelper Ret_Helper(ref Capture capture)
         {
             if (helper == null)
             {
-                helper = new CamHelper();
+                helper = new VideoHelper();
                 helper.cap = capture;
                 return helper;
             }
             else return helper;
         }
 
-        public void Ret_Frames(out Image<Bgr,Byte>small, out Image<Bgr, Byte> large)
+        public void Ret_Frames(out Image<Bgr,Byte>SMALL_SCALE_FRAME, out Image<Bgr, Byte> LARGE_SCALE_FRAME)
         {
-            small = null;large = null;
-            while (cap.Grab()) { large=cap.QueryFrame();small= cap.QuerySmallFrame();return; }
+            SMALL_SCALE_FRAME = null; LARGE_SCALE_FRAME = null;
+            while (cap.Grab()) { LARGE_SCALE_FRAME = cap.QueryFrame(); SMALL_SCALE_FRAME = cap.QuerySmallFrame();return; }
         }
       
     }

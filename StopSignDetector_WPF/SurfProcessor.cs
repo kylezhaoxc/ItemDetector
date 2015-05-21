@@ -11,9 +11,8 @@ using Emgu.CV.Util;
 
 namespace StopSignDetector_WPF
 {
-    class SurfProcessor :ImagePropertiesAnalyzer
+    class SurfProcessor : MatchFilter_interface
     {
-        int index = 1;
         public  int CountContours(System.Drawing.Bitmap temp)
         {
             int ContourNumber = 0;
@@ -35,7 +34,7 @@ namespace StopSignDetector_WPF
 
             return ContourNumber;
         }
-        public  double getarea( PointF[] pts)
+        public  double Getarea( PointF[] pts)
         {
             PointF homolt, homort, homorb, homolb;
             PointF zero = new PointF(0, 0); int zerocount = 0;
@@ -55,15 +54,13 @@ namespace StopSignDetector_WPF
             double middle = Math.Sqrt(Math.Pow((homorb.X - homolt.X), 2) + Math.Pow((homorb.Y - homolt.Y), 2));
             double p_t=(top+right+middle)/2;double p_b=(left+bottom+middle)/2;
             //边长明显过长，返回面积为0，即不会勾画单应矩阵
-            if (top > 2000 || right > 2000 || left > 2000 || right > 2000) return 0;
+            if (top > 800 || right > 800 || left > 800 || right > 800) return 0;
 
             double obarea = Math.Sqrt(p_t * (p_t - top) * (p_t - right) * (p_t - middle)) + Math.Sqrt(p_b * (p_b - left) * (p_b - bottom) * (p_b - middle));
             return obarea;
         }
         public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
-            modelImage.Save("D:\\temp\\model" + index + ".jpg");
-            observedImage.Save("D:\\temp\\observed" + index + ".jpg");
             center = new Point(320,240);
             Stopwatch watch;
             area = 0;
@@ -148,7 +145,7 @@ namespace StopSignDetector_WPF
                     };
                     //根据整个图片的旋转、变形情况，计算出原图中四个顶点转换后的坐标，并画出四边形
                     homography.ProjectPoints(pts);
-                    area = getarea(pts);
+                    area = Getarea(pts);
                 double xsum=0;double ysum=0;
                     foreach(PointF point in pts)
                     {

@@ -29,76 +29,92 @@ namespace StopSignDetector_WPF
 
     public partial class MainWindow : Window
     {
+        Queue<double> MatchStatus = new Queue<double>();
+        Queue<System.Drawing.Point> CenterPoints = new Queue<System.Drawing.Point>();
         private Capture global_cap;
-        private CamHelper global_helper;
+        private VideoHelper global_helper;
         private Image<Bgr, Byte> video_small, video_large, model_small;
         private Image<Bgr, Byte> model_pic;
         SurfProcessor cpu = new SurfProcessor();
-        long time;double area;  int areathreshold = 500; System.Drawing.Point center;
+        long time;double area;  int areathreshold = 500;
+        System.Drawing.Point center;
+        int leastPositiveMatch = 50;
         public MainWindow()
         {
             InitializeComponent();
             global_cap = new Capture(0);
-            global_helper = CamHelper.Ret_Helper(ref global_cap);
+            global_helper = VideoHelper.Ret_Helper(ref global_cap);
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(40);
-            timer.Tick += new EventHandler(take_picture_and_analyze);
+            timer.Tick += new EventHandler(Periodical_Tick_Handler);
             timer.Start();
         }
-        public void take_picture_and_analyze(object sender, EventArgs e)
+        public void Periodical_Tick_Handler(object sender, EventArgs e)
         {
            
                 global_helper.Ret_Frames(out video_small, out video_large);
                 if (video_small != null)
                 {
-                    show_Image(videoframe_s, video_small);
-                    if (video_large != null&&model_pic!=null) ApplySurfMatching();
+                    UIHandler.show_Image(videoframe_s, video_small);
+                if (video_large != null && model_pic != null)
+                    SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
+                MatchStatus.Enqueue(area);
+                if (MatchStatus.Count > 100) MatchStatus.Dequeue();
+                int PositiveMatchNum= StatusCheck(MatchStatus);
+                if (PositiveMatchNum >= leastPositiveMatch)
+                {
+                    CenterPoints.Enqueue(center);
+                    if (CenterPoints.Count > 200) CenterPoints.Dequeue();
+                    string Indicator;
+                    PositionCheck(CenterPoints, out Indicator);
                 }
+            }
             
         }
-        public void ApplySurfMatching()
+        public void PositionCheck(Queue<System.Drawing.Point> CenterPointsQueue,out string Direction)
         {
-            Image<Gray, Byte> m_g = new Image<Gray, Byte>(AppDomain.CurrentDomain.BaseDirectory + "\\modelpicture.jpg");
-            System.Drawing.Bitmap v1 = video_large.ToBitmap();
-            Image<Gray, Byte> v_g = new Image<Gray, Byte>(v1);
-            Image<Bgr, Byte> match_result = cpu.DrawResult(m_g, v_g, out time, out area, areathreshold, out center);
-
-            show_Image(match_res, match_result);
+            int xmax = 420;
+            int xmin = 220;
+            Direction = "N/A";
+            int leftvote = 0, rightvote = 0, centervote = 0;
+            foreach (System.Drawing.Point center in CenterPointsQueue)
+            {
+                if (center.X > xmax) rightvote++;
+                if (center.X < xmin) leftvote++;
+                if (center.X > xmin && center.X < xmax) centervote++;
+            }
+            if (leftvote > 100) Direction = "Turn Left!";
+            if (rightvote > 100) Direction = "Turn Right!";
+            if (centervote > 100) Direction = "Go Straight!";
         }
-        [System.Runtime.InteropServices.DllImport("gdi32")]
-        private static extern int DeleteObject(IntPtr o);
+        private int StatusCheck(Queue<Double> StatusQueue)
+        {
+            int positivematch = 0; double sum = 0; int count = 0;
+            foreach (double area in StatusQueue)
+            {
+                positivematch += area > areathreshold ? 1 : 0;
+                sum += area; count++;
+            }
+
+            return positivematch;
+        }
+
+
 
         private void shot_Click(object sender, RoutedEventArgs e)
         {
             model_small = video_small;
-            show_Image(modelpic_s, model_small);
+            UIHandler.show_Image(modelpic_s, model_small);
             model_pic = video_large;
             model_pic.Save(AppDomain.CurrentDomain.BaseDirectory+"\\modelpicture.jpg");
 
         }
 
-        public static ImageSource ToBitmapSource(System.Drawing.Bitmap image)
-        {
-            IntPtr ptr = image.GetHbitmap();
-
-            ImageSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                ptr,
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-
-            DeleteObject(ptr);
-
-            return bs;
-        }
+      
 
        
 
-        public void show_Image(System.Windows.Controls.Image imgbox, Image<Bgr, Byte> img)
-        {
-            if(img!=null)
-            imgbox.Source = ToBitmapSource(img.ToBitmap());
-        }
+       
        
     }
 }
