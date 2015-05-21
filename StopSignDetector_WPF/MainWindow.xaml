@@ -13,5 +13,12 @@
         <Image x:Name="modelpic_s" Width="320" Height="240" HorizontalAlignment="Left" VerticalAlignment="top" Margin="10,310,10,10" />
         <Image x:Name="match_res" Width="640" Height="480" HorizontalAlignment="Left" VerticalAlignment="top" Margin="450,35,10,35" />
         <Button x:Name="shot" HorizontalAlignment="Left" VerticalAlignment="top" Width="60" Height="30" Margin="350,40,0,0" IsDefault="True" Click="shot_Click">smile!</Button>
+        <Ellipse x:Name="signal" Width="30" Height="30" Fill="Red" HorizontalAlignment="Left" VerticalAlignment="top" Margin="20,580,10,10"></Ellipse>
+        <Label x:Name="MorNM" Content="No Match" HorizontalAlignment="Left" Margin="80,575,0,0" VerticalAlignment="Top" Width="140" FontFamily="Segoe Script" FontSize="21.333" FontWeight="Bold"/>
+        <Label x:Name="Proctime" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,100" FontSize="18.667" FontFamily="Segoe UI Emoji" FontWeight="Bold"></Label>
+        <Image x:Name="direction" VerticalAlignment="Bottom" Height="170" Width="170" HorizontalAlignment="Left" Margin="500,0,0,130"></Image>
+        <Label x:Name="txt_direction" Content="Label" HorizontalAlignment="Left" Margin="723,635,0,0" VerticalAlignment="Top" FontSize="26.667" FontFamily="Franklin Gothic Heavy" FontWeight="Bold"/>
+        <Label x:Name="txt_dist" Content="Label" HorizontalAlignment="Left" Margin="723,570,0,0" VerticalAlignment="Top" FontSize="26.667" FontFamily="Franklin Gothic Heavy" FontWeight="Bold"/>
+        <Label x:Name="txt_area" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,50" FontSize="18.667" FontFamily="Segoe UI Emoji" FontWeight="Bold"></Label>
     </Grid>
 </Window>

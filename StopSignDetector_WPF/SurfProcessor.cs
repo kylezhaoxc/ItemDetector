@@ -65,8 +65,8 @@ namespace StopSignDetector_WPF
             center = new Point(320,240);
             Stopwatch watch;
             area = 0;
-            modelImage.Save("D:\\temp\\modelimage.jpg");
-            observedImage.Save("D:\\temp\\observedimage.jpg");
+            //modelImage.Save("D:\\temp\\modelimage.jpg");
+            //observedImage.Save("D:\\temp\\observedimage.jpg");
 
             double modelarea = (modelImage.ROI.Right - modelImage.ROI.Left) * (modelImage.ROI.Bottom - modelImage.ROI.Top);
             //单应矩阵
@@ -161,7 +161,7 @@ namespace StopSignDetector_WPF
                         Image<Bgr, byte> temp = new Image<Bgr, Byte>(result.Width, result.Height);
                         temp.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5);
                    
-                        temp.Save("D:\\temp\\" + (++index) + ".jpg");
+                       // temp.Save("D:\\temp\\" + (++index) + ".jpg");
                         
                         int a = CountContours(temp.ToBitmap());
                         if (a == 2 ){ result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
@@ -172,7 +172,7 @@ namespace StopSignDetector_WPF
             #endregion
 
             matchTime = watch.ElapsedMilliseconds;
-            
+            //result.Save("D:\\temp\\" + (++index) + ".jpg");
             return result;
         }
    }

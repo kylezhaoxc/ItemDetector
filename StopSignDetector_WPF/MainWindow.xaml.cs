@@ -38,14 +38,17 @@ namespace StopSignDetector_WPF
         SurfProcessor cpu = new SurfProcessor();
         long time;double area;  int areathreshold = 500;
         System.Drawing.Point center;
-        int leastPositiveMatch = 50;
+        int leastPositiveMatch = 5;
         public MainWindow()
         {
             InitializeComponent();
+            txt_direction.Content = "Wait for matching";
+            txt_dist.Content = null;
+            UIHandler.show_Image(modelpic_s, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\no-input-signal.png"));
             global_cap = new Capture(0);
             global_helper = VideoHelper.Ret_Helper(ref global_cap);
             DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(40);
+            timer.Interval = TimeSpan.FromMilliseconds(1);
             timer.Tick += new EventHandler(Periodical_Tick_Handler);
             timer.Start();
         }
@@ -57,17 +60,55 @@ namespace StopSignDetector_WPF
                 {
                     UIHandler.show_Image(videoframe_s, video_small);
                 if (video_large != null && model_pic != null)
-                    SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
-                /*MatchStatus.Enqueue(area);
-                if (MatchStatus.Count > 100) MatchStatus.Dequeue();
-                int PositiveMatchNum= StatusCheck(MatchStatus);
-                if (PositiveMatchNum >= leastPositiveMatch)
                 {
-                    CenterPoints.Enqueue(center);
-                    if (CenterPoints.Count > 200) CenterPoints.Dequeue();
-                    string Indicator;
-                    PositionCheck(CenterPoints, out Indicator);
-                }*/
+                    SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
+
+                    MatchStatus.Enqueue(area);
+                    if (MatchStatus.Count > 10) MatchStatus.Dequeue();
+
+                    int PositiveMatchNum = StatusCheck(MatchStatus);
+                    if (PositiveMatchNum >= leastPositiveMatch)
+                    {
+                        Proctime.Content = "Proceed Time:\t" + time.ToString()+"\tms";
+                        txt_area.Content = "Matched Area:\t" + area.ToString("f1")+"\tpx^2";
+                        signal.Fill = Brushes.Green;
+                        MorNM.Content = "Matched";
+                        CenterPoints.Enqueue(center);
+                        if (CenterPoints.Count >=4) CenterPoints.Dequeue();
+                        string Indicator;
+                        PositionCheck(CenterPoints, out Indicator);
+                        switch (Indicator)
+                        {
+                            case "Turn Left!":
+                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
+                                txt_direction.Content = "Turn Left!";
+                                break;
+                            case "Turn Right!":
+                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
+                                txt_direction.Content = "Turn Right!";
+                                break;
+                            case "Go Straight!":
+                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
+                                txt_direction.Content = "Go Straight!";
+                                break;
+                            default:break;
+                        }
+                        //while matching a clean item,  
+                        if (area > 100000)
+                        {
+                            txt_dist.Content = "Getting Close!";
+                            if (area > 200000) txt_dist.Content = "Stop!";
+                        }
+                        else txt_dist.Content = null;
+                    }
+                    else
+                    {
+                        signal.Fill = Brushes.Red;
+                        MorNM.Content = "No Match";
+                        txt_direction.Content = "Wait for matching......";
+                        direction.Source = null;
+                    }
+                }
             }
             
         }
@@ -83,17 +124,16 @@ namespace StopSignDetector_WPF
                 if (center.X < xmin) leftvote++;
                 if (center.X > xmin && center.X < xmax) centervote++;
             }
-            if (leftvote > 100) Direction = "Turn Left!";
-            if (rightvote > 100) Direction = "Turn Right!";
-            if (centervote > 100) Direction = "Go Straight!";
+            if (leftvote > 2) Direction = "Turn Left!";
+            if (rightvote > 2) Direction = "Turn Right!";
+            if (centervote > 2) Direction = "Go Straight!";
         }
         private int StatusCheck(Queue<Double> StatusQueue)
         {
-            int positivematch = 0; double sum = 0; int count = 0;
+            int positivematch = 0;
             foreach (double area in StatusQueue)
             {
                 positivematch += area > areathreshold ? 1 : 0;
-                sum += area; count++;
             }
 
             return positivematch;
