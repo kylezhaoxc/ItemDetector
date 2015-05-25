@@ -29,8 +29,8 @@ namespace StopSignDetector_WPF
 
     public partial class MainWindow : Window
     {
-        Queue<double> MatchStatus = new Queue<double>();
-        Queue<System.Drawing.Point> CenterPoints = new Queue<System.Drawing.Point>();
+        StatusQueueChecker statusQ = new StatusQueueChecker(10);
+        CenterPositionChecker centerQ = new CenterPositionChecker(4, 420, 220);
         private Capture global_cap;
         private VideoHelper global_helper;
         private Image<Bgr, Byte> video_small, video_large, model_small;
@@ -38,7 +38,6 @@ namespace StopSignDetector_WPF
         SurfProcessor cpu = new SurfProcessor();
         long time;double area;  int areathreshold = 500;
         System.Drawing.Point center;
-        int leastPositiveMatch = 5;
         public MainWindow()
         {
             InitializeComponent();
@@ -62,21 +61,16 @@ namespace StopSignDetector_WPF
                 if (video_large != null && model_pic != null)
                 {
                     SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
-
-                    MatchStatus.Enqueue(area);
-                    if (MatchStatus.Count > 10) MatchStatus.Dequeue();
-
-                    int PositiveMatchNum = StatusCheck(MatchStatus);
-                    if (PositiveMatchNum >= leastPositiveMatch)
+                   
+                    statusQ.EnQ(area);
+                    if (statusQ.CheckMatch(areathreshold))
                     {
                         Proctime.Content = "Proceed Time:\t" + time.ToString()+"\tms";
                         txt_area.Content = "Matched Area:\t" + area.ToString("f1")+"\tpx^2";
                         signal.Fill = Brushes.Green;
                         MorNM.Content = "Matched";
-                        CenterPoints.Enqueue(center);
-                        if (CenterPoints.Count >=4) CenterPoints.Dequeue();
-                        string Indicator;
-                        PositionCheck(CenterPoints, out Indicator);
+                        centerQ.EnQ(center);
+                        string Indicator = centerQ.CheckPosition();
                         switch (Indicator)
                         {
                             case "Turn Left!":
@@ -111,34 +105,7 @@ namespace StopSignDetector_WPF
             }
             
         }
-        public void PositionCheck(Queue<System.Drawing.Point> CenterPointsQueue,out string Direction)
-        {
-            int xmax = 420;
-            int xmin = 220;
-            Direction = "N/A";
-            int leftvote = 0, rightvote = 0, centervote = 0;
-            foreach (System.Drawing.Point center in CenterPointsQueue)
-            {
-                if (center.X > xmax) rightvote++;
-                if (center.X < xmin) leftvote++;
-                if (center.X > xmin && center.X < xmax) centervote++;
-            }
-            if (leftvote > 2) Direction = "Turn Left!";
-            if (rightvote > 2) Direction = "Turn Right!";
-            if (centervote > 2) Direction = "Go Straight!";
-        }
-        private int StatusCheck(Queue<Double> StatusQueue)
-        {
-            int positivematch = 0;
-            foreach (double area in StatusQueue)
-            {
-                positivematch += area > areathreshold ? 1 : 0;
-            }
-
-            return positivematch;
-        }
-
-
+      
 
         private void shot_Click(object sender, RoutedEventArgs e)
         {

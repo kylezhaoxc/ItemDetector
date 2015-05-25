@@ -99,6 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="QueueChecker.cs" />
     <Compile Include="SpecificItemMatcher.cs" />
     <Compile Include="SurfProcessor.cs" />
     <Compile Include="UIHandler.cs" />
