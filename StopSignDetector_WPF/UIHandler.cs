@@ -36,5 +36,24 @@ namespace StopSignDetector_WPF
 
             return bs;
         }
+        public static void TellDirection(System.Windows.Controls.Image DEST_IMG_TO_SHOW,System.Windows.Controls.Label DEST_TXT_TO_SHOW,string DIRECTION_TXT)
+        {
+            switch (DIRECTION_TXT)
+            {
+                case "Turn Left!":
+                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
+                    DEST_TXT_TO_SHOW.Content = "Turn Left!";
+                    break;
+                case "Turn Right!":
+                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
+                    DEST_TXT_TO_SHOW.Content = "Turn Right!";
+                    break;
+                case "Go Straight!":
+                    UIHandler.show_Image(DEST_IMG_TO_SHOW, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
+                    DEST_TXT_TO_SHOW.Content = "Go Straight!";
+                    break;
+                default: break;
+            }
+        }
     }
 }

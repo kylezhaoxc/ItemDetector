@@ -29,8 +29,8 @@ namespace StopSignDetector_WPF
 
     public partial class MainWindow : Window
     {
-        StatusQueueChecker statusQ = new StatusQueueChecker(10);
-        CenterPositionChecker centerQ = new CenterPositionChecker(4, 420, 220);
+        StatusQueueChecker statusQ;
+        CenterPositionChecker centerQ;
         private Capture global_cap;
         private VideoHelper global_helper;
         private Image<Bgr, Byte> video_small, video_large, model_small;
@@ -61,7 +61,6 @@ namespace StopSignDetector_WPF
                 if (video_large != null && model_pic != null)
                 {
                     SpecificItemMatcher.ApplySurfMatching(match_res, video_large, ref cpu, out time, out area, areathreshold, out center);
-                   
                     statusQ.EnQ(area);
                     if (statusQ.CheckMatch(areathreshold))
                     {
@@ -71,22 +70,7 @@ namespace StopSignDetector_WPF
                         MorNM.Content = "Matched";
                         centerQ.EnQ(center);
                         string Indicator = centerQ.CheckPosition();
-                        switch (Indicator)
-                        {
-                            case "Turn Left!":
-                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\left.jpg"));
-                                txt_direction.Content = "Turn Left!";
-                                break;
-                            case "Turn Right!":
-                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\right.jpg"));
-                                txt_direction.Content = "Turn Right!";
-                                break;
-                            case "Go Straight!":
-                                UIHandler.show_Image(direction, new Image<Bgr, byte>(AppDomain.CurrentDomain.BaseDirectory + "\\images\\straight.jpg"));
-                                txt_direction.Content = "Go Straight!";
-                                break;
-                            default:break;
-                        }
+                        UIHandler.TellDirection(direction, txt_direction, Indicator);
                         if (area > 100000)
                         {
                             txt_dist.Content = "Getting Close!";
@@ -109,6 +93,8 @@ namespace StopSignDetector_WPF
 
         private void shot_Click(object sender, RoutedEventArgs e)
         {
+            statusQ = new StatusQueueChecker(10);
+            centerQ = new CenterPositionChecker(4, 420, 220);
             model_small = video_small;
             UIHandler.show_Image(modelpic_s, model_small);
             model_pic = video_large;
