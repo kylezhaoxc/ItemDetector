@@ -44,6 +44,8 @@ namespace NewImageTool
         public MainWindow()
         {
             InitializeComponent();
+            txt_direction.Content = "Wait for matching";
+            txt_dist.Content = null;
             InitBetterTogether();
         }
         
@@ -144,10 +146,31 @@ namespace NewImageTool
                                 Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
                                 cam_right.Source = UIHandler.ToBitmapSource(res.ToBitmap());
-                                lbtime.Content = time.ToString("f2");
-                                lbarea.Content = area.ToString();
                                 statusQ.EnQ(area);
-                                
+                                if (statusQ.CheckMatch(areathreshold))
+                                {
+                                    lbtime.Content = time.ToString("f2") + "\tms";
+                                    lbarea.Content = area.ToString();
+                                    signal.Fill = Brushes.Green;
+                                    MorNM.Content = "Matched";
+                                    centerQ.EnQ(center);
+                                    string Indicator = centerQ.CheckPosition();
+                                    UIHandler.TellDirection(direction, txt_direction, Indicator);
+                                    if (area > 100000)
+                                    {
+                                        txt_dist.Content = "Getting Close!";
+                                        if (area > 200000) txt_dist.Content = "Stop!";
+                                    }
+                                    else txt_dist.Content = null;
+                                }
+                                else
+                                {
+                                    signal.Fill = Brushes.Red;
+                                    MorNM.Content = "No Match";
+                                    txt_direction.Content = "Wait for matching......";
+                                    direction.Source = null;
+                                }
+
                             }
                         }
                         catch (Exception ex) { };
