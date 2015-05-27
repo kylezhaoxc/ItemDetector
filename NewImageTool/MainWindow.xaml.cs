@@ -156,7 +156,7 @@ namespace NewImageTool
                                     centerQ.EnQ(center);
                                     string Indicator = centerQ.CheckPosition();
                                     UIHandler.TellDirection(direction, txt_direction, Indicator);
-                                    if (area > 15000)
+                                    if (area > 100000)
                                     {
                                         txt_dist.Content = "Getting Close!";
                                         if (area > 200000) txt_dist.Content = "Stop!";
