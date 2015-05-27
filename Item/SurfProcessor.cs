@@ -9,7 +9,7 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace Specified_Item
+namespace Item
 {
     class SpecificItemMatcher
     {

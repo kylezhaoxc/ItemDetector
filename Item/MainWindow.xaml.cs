@@ -20,7 +20,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
-namespace Specified_Item
+namespace Item
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -35,7 +35,7 @@ namespace Specified_Item
         CenterPositionChecker centerQ;
         int index = 0;
         //bitmapsource to buffer modelimage and observed image
-        Image<Bgr,Byte> model, observed;
+        Image<Bgr, Byte> model, observed;
         BitmapImage bitmapImage;
         //parameters for surf 
         SurfProcessor cpu = new SurfProcessor();
@@ -48,7 +48,7 @@ namespace Specified_Item
             txt_dist.Content = null;
             InitBetterTogether();
         }
-        
+
         private void InitBetterTogether()
         {
             // Initializes the device discovery service. By default NFC pairing is disabled, and WiFi broadcast pairing is enabled.
@@ -59,7 +59,7 @@ namespace Specified_Item
 
             // Subscribe to an event that indicates that connection status has changed.
             DeviceFinder.ConnectionStatusChanged += DeviceFinder_ConnectionStatusChanged;
-            
+
             try
             {
                 // Start device discovery through NFC pairing. The connection will be established using Wi-Fi.
@@ -109,7 +109,7 @@ namespace Specified_Item
                     _device.CameraManager.GetAvailableCaptureResolutions(
                     CameraLocation.Back)[0]
                     );
-            ell_flag.Fill =System.Windows.Media.Brushes.Green;
+            ell_flag.Fill = System.Windows.Media.Brushes.Green;
             ell_flag.Stroke = System.Windows.Media.Brushes.Green;
             // Please notice the preview resolution is different to capture resolution
             await _camera.SetPreviewResolutionAsync(new System.Windows.Size(800, 448));
@@ -137,7 +137,7 @@ namespace Specified_Item
                             bitmapImage.StreamSource = stream;   // Copy stream to local
                             bitmapImage.EndInit();
 
-                            if(model==null)cam.Source = bitmapImage;
+                            if (model == null) cam.Source = bitmapImage;
                             observed = new Image<Bgr, byte>(UIHandler.bmimg2bitmap(bitmapImage));
                             if (model != null)
                             {
@@ -187,6 +187,6 @@ namespace Specified_Item
             UIHandler.show_Image(cam, model);
         }
 
-       
+
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Specified_Item
+namespace Item
 {
     class QueueChecker<T>
     {
