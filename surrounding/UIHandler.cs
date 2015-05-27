@@ -12,7 +12,7 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace surrounding
+namespace Surrounding
 {
     class UIHandler
     {

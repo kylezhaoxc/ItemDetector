@@ -20,7 +20,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
-namespace NewImageTool
+namespace Specified_Item
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

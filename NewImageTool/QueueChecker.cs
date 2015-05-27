@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewImageTool
+namespace Specified_Item
 {
     class QueueChecker<T>
     {

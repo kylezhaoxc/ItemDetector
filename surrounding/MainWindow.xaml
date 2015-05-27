@@ -1,4 +1,4 @@
-﻿<Window x:Name="Match_Surroundings" x:Class="surrounding.MainWindow"
+﻿<Window x:Name="Match_Surroundings" x:Class="Surrounding.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Match Surroundings" >
