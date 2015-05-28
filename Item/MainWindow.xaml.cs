@@ -182,7 +182,7 @@ namespace Item
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             statusQ = new StatusQueueChecker(10);
-            centerQ = new CenterPositionChecker(4, 400, 224);
+            centerQ = new CenterPositionChecker(4,450,350);
             model = observed.Clone();
             UIHandler.show_Image(cam, model);
         }

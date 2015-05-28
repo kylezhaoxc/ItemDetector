@@ -68,6 +68,31 @@ namespace Surrounding
             double obarea = Math.Sqrt(p_t * (p_t - top) * (p_t - right) * (p_t - middle)) + Math.Sqrt(p_b * (p_b - left) * (p_b - bottom) * (p_b - middle));
             return obarea;
         }
+        public double GetDist(PointF[] pts)
+        {
+            double dist = 0;
+            double max_y = 224, min_y = 224;
+            double rate = 0, ImageDist = 0;
+            foreach (PointF points in pts)
+            {
+                max_y = max_y > points.Y ? max_y : points.Y;
+                min_y = min_y < points.Y ? min_y : points.Y;
+
+            }
+            //item is in the upper part of the picture.
+            if (max_y == 224) {
+                rate = min_y / 224;
+                ImageDist = RobotProperties.RobotHeight * rate;
+                dist = (RobotProperties.BlindArea * RobotProperties.RobotHeight) / (RobotProperties.RobotHeight - ImageDist);
+            }
+            else
+            {
+                rate = (448 - max_y) / 224;
+                ImageDist = RobotProperties.RobotHeight * rate;
+                dist = (RobotProperties.BlindArea * RobotProperties.RobotHeight) / (RobotProperties.RobotHeight - ImageDist);
+            }
+            return dist;
+        }
         public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
             center = new Point(400,224);
@@ -168,9 +193,8 @@ namespace Surrounding
                     {
                         Image<Bgr, byte> temp = new Image<Bgr, Byte>(result.Width, result.Height);
                         temp.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5);
-                   
+                    double distance = GetDist(pts);
                        // temp.Save("D:\\temp\\" + (++index) + ".jpg");
-                        
                         int a = CountContours(temp.ToBitmap());
                         if (a == 2 ){ result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
                         else { matchTime = 0; area = 0; return result; }
