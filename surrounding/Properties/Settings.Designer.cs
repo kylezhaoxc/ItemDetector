@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace surrounding.Properties {
+namespace Surrounding.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

@@ -1,7 +1,7 @@
-﻿<Application x:Class="surrounding.App"
+﻿<Application x:Class="Surrounding.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:surrounding"
+             xmlns:local="clr-namespace:Surrounding"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
