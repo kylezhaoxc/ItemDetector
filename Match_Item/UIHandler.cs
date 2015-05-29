@@ -12,7 +12,7 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace Item
+namespace Match_Item
 {
     class UIHandler
     {

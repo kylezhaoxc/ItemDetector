@@ -9,7 +9,7 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 
-namespace Surrounding
+namespace Match_Surrounding
 {
     class SpecificItemMatcher
     {

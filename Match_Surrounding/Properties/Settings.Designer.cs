@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Item.Properties
+namespace Match_Surrounding.Properties
 {
 
 

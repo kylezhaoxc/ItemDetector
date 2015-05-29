@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Item
+namespace Match_Surrounding
 {
     class QueueChecker<T>
     {
@@ -14,7 +14,7 @@ namespace Item
         {
             Max_Len = len;
             target = new Queue<T>(len);
-            Acc_Len = Max_Len /2;
+            Acc_Len = Max_Len /4;
         }
         public void EnQ(T element)
         {
@@ -44,9 +44,9 @@ namespace Item
                 if (center.X < xmin) leftvote++;
                 if (center.X > xmin && center.X < xmax) centervote++;
             }
-            if (leftvote > Acc_Len) Direction = "Turn Left!";
-            if (rightvote > Acc_Len) Direction = "Turn Right!";
-            if (centervote > Acc_Len) Direction = "Go Straight!";
+            if (leftvote > Acc_Len) return "Turn Left!";
+            if (rightvote >  Acc_Len) return "Turn Right!";
+            if (centervote >  Acc_Len) return "Go Straight!";
 
             return Direction;
         }

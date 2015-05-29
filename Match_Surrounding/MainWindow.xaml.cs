@@ -20,7 +20,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Features2D;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
-namespace Item
+namespace Match_Surrounding
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -156,11 +156,10 @@ namespace Item
                                     centerQ.EnQ(center);
                                     string Indicator = centerQ.CheckPosition();
                                     UIHandler.TellDirection(direction, txt_direction, Indicator);
-                                    if (area > 100000)
-                                    {
-                                        txt_dist.Content = "Getting Close!";
-                                        if (area > 200000) txt_dist.Content = "Stop!";
-                                    }
+                                    if (area > 280000)
+                                        txt_dist.Content = "Stop!";
+                                    else if (area > 150000) txt_dist.Content = "Getting Close!";
+
                                     else txt_dist.Content = null;
                                 }
                                 else
@@ -182,7 +181,7 @@ namespace Item
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             statusQ = new StatusQueueChecker(10);
-            centerQ = new CenterPositionChecker(4,450,350);
+            centerQ = new CenterPositionChecker(4, 420, 380);
             model = observed.Clone();
             UIHandler.show_Image(cam, model);
         }
