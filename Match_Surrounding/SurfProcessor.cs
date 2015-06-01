@@ -89,7 +89,7 @@ namespace Match_Surrounding
         #endregion
         public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
-            double estimated_dist =99999;
+            //double estimated_dist =99999;
             center = new Point(400,224);
             Stopwatch watch;
             area = 0;

@@ -39,7 +39,7 @@ namespace Match_Surrounding
         //parameters for surf 
         SurfProcessor cpu = new SurfProcessor();
         long time; double area; int areathreshold = 500; System.Drawing.Point center;//double distance;
-
+        double flag = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -155,10 +155,17 @@ namespace Match_Surrounding
                                     centerQ.EnQ(center);
                                     string Indicator = centerQ.CheckPosition();
                                     UIHandler.TellDirection(direction, txt_direction, Indicator);
-                                    if (area > 280000)
-                                        txt_dist.Content = "Stop!";
-                                    else if (area > 150000) txt_dist.Content = "Getting Close!";
 
+                                    #region estimate-distance
+                                    //use area
+                                    if (area > 250000)
+                                    { flag += 1; flag = flag >10 ? 10 : flag; }
+                                    else
+                                    { flag -= 1; flag = flag <-10 ? -10 : flag; };
+
+                                        #endregion
+                                    if(flag>-8)
+                                        txt_dist.Content = "Stop!";
                                     else txt_dist.Content = null;
                                 }
                                 else
