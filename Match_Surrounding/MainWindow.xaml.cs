@@ -33,13 +33,12 @@ namespace Match_Surrounding
         //two global buffer queue
         StatusQueueChecker statusQ;
         CenterPositionChecker centerQ;
-        int index = 0;
         //bitmapsource to buffer modelimage and observed image
         Image<Bgr, Byte> model, observed;
         BitmapImage bitmapImage;
         //parameters for surf 
         SurfProcessor cpu = new SurfProcessor();
-        long time; double area; int areathreshold = 500; System.Drawing.Point center;
+        long time; double area; int areathreshold = 500; System.Drawing.Point center;//double distance;
 
         public MainWindow()
         {
@@ -143,7 +142,7 @@ namespace Match_Surrounding
                             {
                                 Image<Gray, Byte> m_g = new Image<Gray, Byte>(model.ToBitmap());
                                 Image<Gray, Byte> o_g = new Image<Gray, Byte>(observed.ToBitmap());
-                                Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center);
+                                Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center/*,out distance*/);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
                                 cam_right.Source = UIHandler.ToBitmapSource(res.ToBitmap());
                                 statusQ.EnQ(area);
@@ -180,8 +179,8 @@ namespace Match_Surrounding
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            statusQ = new StatusQueueChecker(10);
-            centerQ = new CenterPositionChecker(4, 420, 380);
+            statusQ = new StatusQueueChecker(4);
+            centerQ = new CenterPositionChecker(10, 420, 380);
             model = observed.Clone();
             UIHandler.show_Image(cam, model);
         }

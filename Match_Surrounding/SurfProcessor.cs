@@ -68,33 +68,28 @@ namespace Match_Surrounding
             double obarea = Math.Sqrt(p_t * (p_t - top) * (p_t - right) * (p_t - middle)) + Math.Sqrt(p_b * (p_b - left) * (p_b - bottom) * (p_b - middle));
             return obarea;
         }
-        public double GetDist(PointF[] pts)
+        #region distance-estimation
+        /*public double GetDist(PointF[] pts)
         {
             double dist = 0;
-            double max_y = 224, min_y = 224;
-            double rate = 0, ImageDist = 0;
+            double max_y = 0;
             foreach (PointF points in pts)
             {
-                max_y = max_y > points.Y ? max_y : points.Y;
-                min_y = min_y < points.Y ? min_y : points.Y;
-
+                max_y = max_y > points.Y ? max_y : points.Y; 
             }
-            //item is in the upper part of the picture.
-            if (max_y == 224) {
-                rate = min_y / 224;
-                ImageDist = RobotProperties.RobotHeight * rate;
-                dist = (RobotProperties.BlindArea * RobotProperties.RobotHeight) / (RobotProperties.RobotHeight - ImageDist);
-            }
+            if (max_y > 448) return 0;
             else
             {
-                rate = (448 - max_y) / 224;
-                ImageDist = RobotProperties.RobotHeight * rate;
-                dist = (RobotProperties.BlindArea * RobotProperties.RobotHeight) / (RobotProperties.RobotHeight - ImageDist);
+                dist = RobotProperties.Hoc / Math.Tan(Math.Atan(RobotProperties.Hoc / RobotProperties.Lob) * ((2 * max_y - 448) / 896));
             }
+            //item is in the upper part of the picture.
+           
             return dist;
-        }
+        }*/
+        #endregion
         public  Image<Bgr, Byte> DrawResult(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime,out double area,int minarea,out Point center)
         {
+            double estimated_dist =99999;
             center = new Point(400,224);
             Stopwatch watch;
             area = 0;
@@ -131,7 +126,7 @@ namespace Match_Surrounding
                 observedKeyPoints = surfCPU.DetectKeyPointsRaw(observedImage, null);
                 Matrix<float> observedDescriptors = surfCPU.ComputeDescriptorsRaw(observedImage, null, observedKeyPoints);
                 if (observedDescriptors == null) {
-                    watch.Stop(); matchTime = watch.ElapsedMilliseconds; 
+                    watch.Stop(); matchTime = watch.ElapsedMilliseconds; //dst = estimated_dist;
                     return null; }
             
             //使用BF匹配算法，匹配特征向量    
@@ -193,18 +188,27 @@ namespace Match_Surrounding
                     {
                         Image<Bgr, byte> temp = new Image<Bgr, Byte>(result.Width, result.Height);
                         temp.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5);
-                    double distance = GetDist(pts);
-                       // temp.Save("D:\\temp\\" + (++index) + ".jpg");
-                        int a = CountContours(temp.ToBitmap());
-                        if (a == 2 ){ result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5); }
-                        else { matchTime = 0; area = 0; return result; }
+                    //estimated_dist = GetDist(pts);
+                   
+                    int a = CountContours(temp.ToBitmap());
+                        if (a == 2 )
+                    {
+                        result.DrawPolyline(Array.ConvertAll<PointF, Point>(pts, Point.Round), true, new Bgr(Color.Red), 5);
+                        //result.Save("D:\\temp\\" + estimated_dist.ToString() + ".jpg");
+                    }
+                        else
+                    {
+                        matchTime = 0;
+                        area = 0;//dst = estimated_dist;
+                        return result;
+                    }
                     }
                 }
                 else area = 0; 
             #endregion
 
             matchTime = watch.ElapsedMilliseconds;
-            //result.Save("D:\\temp\\" + (++index) + ".jpg");
+            //dst = estimated_dist;
             return result;
         }
    }
