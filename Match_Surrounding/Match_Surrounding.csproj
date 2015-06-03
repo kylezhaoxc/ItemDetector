@@ -106,7 +106,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="QueueChecker.cs" />
-    <Compile Include="RoutePoint.cs" />
     <Compile Include="SurfProcessor.cs" />
     <Compile Include="UIHandler.cs" />
     <Page Include="MainWindow.xaml">
