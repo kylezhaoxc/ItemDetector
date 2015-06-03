@@ -28,6 +28,7 @@ namespace Match_Surrounding
     public partial class MainWindow : Window
     {
         IPairedDevice _device;
+        int index = 0;
         ICamera _camera;
         System.IO.MemoryStream stream;
         //two global buffer queue
@@ -140,11 +141,15 @@ namespace Match_Surrounding
                             observed = new Image<Bgr, byte>(UIHandler.bmimg2bitmap(bitmapImage));
                             if (model != null)
                             {
+                                #region MatchAndFindHomography
                                 Image<Gray, Byte> m_g = new Image<Gray, Byte>(model.ToBitmap());
                                 Image<Gray, Byte> o_g = new Image<Gray, Byte>(observed.ToBitmap());
                                 Image<Bgr, Byte> res = cpu.DrawResult(m_g, o_g, out time, out area, areathreshold, out center/*,out distance*/);
                                 //res.Save("D:\\res_" + (++index) + ".jpg");
                                 cam_right.Source = UIHandler.ToBitmapSource(res.ToBitmap());
+                                #endregion
+
+                                #region StablizeTheResultWithQueue
                                 statusQ.EnQ(area);
                                 if (statusQ.CheckMatch(areathreshold))
                                 {
@@ -163,11 +168,12 @@ namespace Match_Surrounding
                                     else
                                     { flag -= 1; flag = flag <-10 ? -10 : flag; };
 
-                                        #endregion
+                                     
                                     if(flag>-8)
                                         txt_dist.Content = "Stop!";
                                     else txt_dist.Content = null;
                                 }
+                                #endregion
                                 else
                                 {
                                     signal.Fill = Brushes.Red;
@@ -175,7 +181,7 @@ namespace Match_Surrounding
                                     txt_direction.Content = "Wait for matching......";
                                     direction.Source = null;
                                 }
-
+                                #endregion
                             }
                         }
                         catch (Exception ex) { };
@@ -189,6 +195,7 @@ namespace Match_Surrounding
             statusQ = new StatusQueueChecker(4);
             centerQ = new CenterPositionChecker(10, 420, 380);
             model = observed.Clone();
+            model.Save("D:\\temp\\" + (++index) + ".jpg");
             UIHandler.show_Image(cam, model);
         }
 

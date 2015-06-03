@@ -96,7 +96,7 @@ namespace Match_Surrounding
             //modelImage.Save("D:\\temp\\modelimage.jpg");
             //observedImage.Save("D:\\temp\\observedimage.jpg");
 
-            double modelarea = (modelImage.ROI.Right - modelImage.ROI.Left) * (modelImage.ROI.Bottom - modelImage.ROI.Top);
+           
             //单应矩阵
             HomographyMatrix homography = null;
 
